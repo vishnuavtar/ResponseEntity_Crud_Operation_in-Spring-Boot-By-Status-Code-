@@ -1,0 +1,2012 @@
+<div *ngIf="data.action === 'createOrg'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label" jhiTranslate="cyfirmaweb.orgEdit.form.{{ data.label }}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="newOrgForm" (ngSubmit)="newOrg('create')">
+    <div class="body box-shadow-woh col-inner">
+      <div class="row">
+        <div class="col-sm-4 cust_input_box" *ngIf="this.data.data">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgName.value }"
+            [ngClass]="{ 'ia field-dirty': orgName.value }"
+            formControlName="name"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.organisationName' | translate }}"
+            #orgName
+            readonly
+          />
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (ORGANISATION NAME)_02FEB2021.png"
+          /></label>
+        </div>
+        <div class="col-sm-4 cust_input_box" *ngIf="!this.data.data">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgName.value }"
+            [ngClass]="{ 'ia field-dirty': orgName.value }"
+            formControlName="name"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.organisationName' | translate }}"
+            #orgName
+          />
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (ORGANISATION NAME)_02FEB2021.png"
+          /></label>
+        </div>
+
+        <div class="col-sm-4 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgContact.value }"
+            formControlName="contact"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.contactPerson' | translate }}"
+            #orgContact
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (CONTACT PERSON)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-2 mr_b10">
+          <mat-select formControlName="pov" *ngIf="!data.data" placeholder="Select" (selectionChange)="radioChange($event.value)">
+            <mat-option value="">Select POV</mat-option>
+            <mat-option *ngFor="let pv of povDropdown" [value]="pv.value">
+              {{ pv.label }}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 cust_input_box">
+          <textarea
+            id=""
+            rows="3"
+            style="width: 100%; padding-left: 10px; padding-top: 7px; border: 1px solid #ced4da"
+            [ngClass]="{ 'ia field-dirty': orgAlias.value }"
+            formControlName="aliases"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.aliases' | translate }}"
+            #orgAlias
+          ></textarea>
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (ALIASES)_05FEB2021_V1 (PNG).png"
+          /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgPhone.value }"
+            formControlName="phone"
+            [matTooltip]="getErrorMessage('org')"
+            [matTooltipDisabled]="patternMatch"
+            maxlength="15"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.contactPhone' | translate }}"
+            #orgPhone
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (PHONE)_02FEB2021.png" /></label>
+          <mat-error *ngIf="patternMatch">{{ getErrorMessage('org') }}</mat-error>
+        </div>
+        <div class="col-sm-6 cust_input_box" *ngIf="this.data.data">
+          <input
+            type="email"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgEmail.value }"
+            formControlName="email"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.email' | translate }}"
+            #orgEmail
+            readonly
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (EMAIL ADD)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box" *ngIf="!this.data.data">
+          <input
+            type="email"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgEmail.value }"
+            formControlName="email"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.email' | translate }}"
+            #orgEmail
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (EMAIL ADD)_02FEB2021.png" /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 cust_input_box">
+          <textarea
+            id=""
+            rows="3"
+            style="width: 100%; padding-left: 10px; padding-top: 7px; border: 1px solid #ced4da"
+            [ngClass]="{ 'ia field-dirty': orgAddress.value }"
+            formControlName="address"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.address' | translate }}"
+            #orgAddress
+          ></textarea>
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (ADDRESS)_05FEB2021_V1 (PNG).png"
+          /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgCity.value }"
+            formControlName="city"
+            placeholder="{{ 'cyfirmaweb.org.form.placeholder.city' | translate }}"
+            #orgCity
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (CITY)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgState.value }"
+            formControlName="state"
+            placeholder="{{ 'cyfirmaweb.org.form.placeholder.state' | translate }}"
+            #orgState
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (STATE)_02FEB2021.png" /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgCountry.value }"
+            formControlName="country"
+            placeholder="{{ 'cyfirmaweb.org.form.placeholder.country' | translate }}"
+            #orgCountry
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (COUNTRY)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgZip.value }"
+            formControlName="zip"
+            placeholder="{{ 'cyfirmaweb.org.form.placeholder.zip' | translate }}"
+            #orgZip
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (ZIP CODE)_02FEB2021.png" /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div
+          class="col-sm-6 cust_input_box"
+          *ngIf="
+            this.data.data &&
+            (loggedinUserDet.roleType == 'Analyst' ||
+              loggedinUserDet.roleType == 'Sales' ||
+              loggedinUserDet.roleType == 'Admin' ||
+              isRootOrg == true) &&
+            (parentOrgId == loggedinUserDet.orgId || isRootOrg == true)
+          "
+        >
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': noOfUser.value }"
+            formControlName="noOfUsers"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.noOfUsers' | translate }}"
+            #noOfUser
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (NO OF USERS)_02FEB2021.png" /></label>
+        </div>
+        <div
+          class="col-sm-6 cust_input_box"
+          *ngIf="
+            this.data.data &&
+            !(
+              (loggedinUserDet.roleType == 'Analyst' ||
+                loggedinUserDet.roleType == 'Sales' ||
+                loggedinUserDet.roleType == 'Admin' ||
+                isRootOrg == true) &&
+              (parentOrgId == loggedinUserDet.orgId || isRootOrg == true)
+            )
+          "
+        >
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': noOfUser.value }"
+            formControlName="noOfUsers"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.noOfUsers' | translate }}"
+            #noOfUser
+            readonly
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (NO OF USERS)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box" *ngIf="!this.data.data">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': noOfUser.value }"
+            (keypress)="onKeypressEvent($event)"
+            formControlName="noOfUsers"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.noOfUsers' | translate }}"
+            #noOfUser
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (NO OF USERS)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgWebsite.value }"
+            formControlName="website"
+            placeholder="{{ 'cyfirmaweb.org.form.placeholder.website' | translate }}"
+            #orgWebsite
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (WEBSITE)_02FEB2021.png" /></label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div *ngIf="isAnalyst" class="col-sm-6 cust_input_box mt-3">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': noOfDigitalRisksKeyWord.value }"
+            (keypress)="onKeypressEvent($event)"
+            formControlName="noOfDigitalRisksKeyWords"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.noOfDigitalRisksKeyWords' | translate }}"
+            #noOfDigitalRisksKeyWord
+          />
+          <label class="il">No. of Digital Risk Keywords</label>
+        </div>
+
+        <div
+          *ngIf="isAnalyst && newOrgForm.controls['pov'] && newOrgForm.controls['pov'].value != 'TRIAL_POV'"
+          class="col-sm-2 cust_input_box mt-3"
+        >
+          <mat-checkbox [labelPosition]="'before'" #isThirdPartyDomainsEnable formControlName="isThirdPartyDomainsEnable" class="ml15">
+            <span>Third Party Domain</span>
+          </mat-checkbox>
+        </div>
+        <div
+          *ngIf="
+            isAnalyst &&
+            newOrgForm.controls['pov'] &&
+            newOrgForm.controls['pov'].value != 'TRIAL_POV' &&
+            newOrgForm.value.isThirdPartyDomainsEnable
+          "
+          class="col-sm-4 cust_input_box mt-3"
+        >
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': noOfThirdPartyDomains.value }"
+            (keypress)="onKeypressEvent($event)"
+            formControlName="noOfThirdPartyDomains"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.noOfThirdPartyDomains' | translate }}"
+            #noOfThirdPartyDomains
+          />
+          <label class="il">No of Third Party Domain</label>
+        </div>
+      </div>
+
+      <!-- CRM ACCOUNT LINK -->
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <div *ngIf="isAnalyst && newOrgForm.controls['pov'] && newOrgForm.controls['pov'].value != 'TRIAL_POV'">
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="{ 'ia field-dirty': crmAccountLink.value }"
+              formControlName="crmAccountLink"
+              placeholder="{{ 'cyfirmaweb.org.form.placeholder.crmAccountLink' | translate }}"
+              #crmAccountLink
+            />
+          </div>
+        </div>
+        <!-- CRM OPPORTUNITY LINK -->
+        <div class="col-sm-6 cust_input_box">
+          <div *ngIf="isAnalyst && newOrgForm.controls['pov'] && newOrgForm.controls['pov'].value != 'TRIAL_POV'">
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="{ 'ia field-dirty': crmOpportunityLink.value }"
+              formControlName="crmOpportunityLink"
+              placeholder="{{ 'cyfirmaweb.org.form.placeholder.crmOpportunityLink' | translate }}"
+              #crmOpportunityLink
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (TIME ZONE)_05FEB2021_V1 (PNG).png"
+          /></label>
+          <mat-form-field style="width: 100%">
+            <mat-select formControlName="timeZone" required>
+              <mat-option value="">
+                <span jhiTranslate="cyfirmaweb.orgEdit.form.selectTimezone"></span>
+              </mat-option>
+              <mat-option *ngFor="let tz of timeZones" [value]="tz.value">
+                {{ tz.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- <input type="text" class="form-control" [ngClass]="{'ia field-dirty': orgName.value}" formControlName="parentid" placeholder="{{'cyfirmaweb.org.form.placeholder.parentid' | translate}}"> -->
+        </div>
+
+        <div
+          class="col-sm-6"
+          *ngIf="
+            this.data.data &&
+            (loggedinUserDet.roleType == 'Analyst' ||
+              loggedinUserDet.roleType == 'Sales' ||
+              loggedinUserDet.roleType == 'Admin' ||
+              isRootOrg == true) &&
+            (parentOrgId == loggedinUserDet.orgId || isRootOrg == true)
+          "
+        >
+          <div class="radio-group" style="margin-top: 6px">
+            <mat-radio-group class="radio-group" formControlName="status">
+              <mat-radio-button
+                style="padding-left: 16px"
+                class="radio-button"
+                [value]="status"
+                *ngFor="let status of ['Active', 'Inactive']"
+              >
+                {{ status }}</mat-radio-button
+              >
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="col-sm-6" *ngIf="!this.data.data">
+          <label class="il">
+            <img [src]="s3BaseImgUrl + 'etlm.png'" />
+            <!-- <img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (BASIC SOLUTIONS)_05FEB2021_V1 (PNG).png"> -->
+          </label>
+          <mat-select
+            placeholder="{{ 'cyfirmaweb.org.form.placeholder.module' | translate }}"
+            class="form-control"
+            formControlName="moduleName"
+            required
+            multiple
+          >
+            <mat-option *ngFor="let moduleName of orgModules" [disabled]="!moduleName.active" [value]="moduleName.label">
+              {{ moduleName.label === 'Threat Visibility and Intelligence' ? 'External Threat Landscape Management' : moduleName.label }}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <!-- <div class="line_gap"></div> -->
+      <div class="row"></div>
+      <div class="line_gap"></div>
+      <div class="row" *ngIf="!this.data.data">
+        <div class="col-sm-6">
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (START DATE)_05FEB2021_V1 (PNG).png"
+          /></label>
+          <div class="input-group dt">
+            <input
+              class="form-control"
+              placeholder="{{ 'cyfirmaweb.org.form.placeholder.startdate' | translate }}"
+              name="startDate"
+              [displayMonths]="1"
+              [minDate]="minDate"
+              ngbDatepicker
+              #sd="ngbDatepicker"
+              formControlName="startDate"
+              required
+              (ngModelChange)="startdateChange($event)"
+            />
+            <div class="input-group-append">
+              <button style="padding: 0px 0px 0px -10px" class="input-group-text" (click)="sd.toggle()" type="button">
+                <i class="material-icons fs-20">calendar_today</i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (END DATE)_05FEB2021_V1 (PNG).png"
+          /></label>
+          <div class="input-group dt">
+            <input
+              class="form-control"
+              placeholder="{{ 'cyfirmaweb.org.form.placeholder.enddate' | translate }}"
+              [(ngModel)]="endDate"
+              name="endDate"
+              [displayMonths]="1"
+              [minDate]="minDate"
+              [disabled]="trialRef"
+              ngbDatepicker
+              #ed="ngbDatepicker"
+              formControlName="endDate"
+              required
+            />
+            <div class="input-group-append">
+              <button style="padding: 0px 0px 0px -10px" class="input-group-text" (click)="ed.toggle()" type="button">
+                <i class="material-icons fs-20">calendar_today</i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="line_gap"></div>
+      <div class="line_gap"></div>
+      <div class="row">
+        <div class="col-sm-3" *ngIf="loggedinUserDet.roleType == 'Analyst' || loggedinUserDet.roleType == 'Sales'">
+          <mat-radio-group aria-label="Select an option" formControlName="orgType">
+            <mat-radio-button value="Premium">Premium</mat-radio-button>
+            <mat-radio-button value="SaaS">SaaS</mat-radio-button>
+            <mat-radio-button value="MSSP">MSSP</mat-radio-button>
+            <!-- <mat-radio-button value="DRD">DRD</mat-radio-button> -->
+          </mat-radio-group>
+        </div>
+        <div class="col-sm-3 mr_b10" *ngIf="loggedinUserDet.roleType == 'Analyst' || loggedinUserDet.roleType == 'Sales'">
+          <mat-slide-toggle [color]="'primary'" formControlName="testorg"
+            ><span style="font-weight: bold; font-size: 100%">Test Org</span></mat-slide-toggle
+          >
+        </div>
+        <div class="col-sm-3 mr_b10">
+          <!-- <mat-checkbox formControlName="is2AF">2AF</mat-checkbox> -->
+          <mat-slide-toggle [color]="'primary'" formControlName="is2fa">
+            <span style="font-weight: bold; font-size: 100%" jhiTranslate="cyfirmaweb.orgEdit.form.enableTwoFactor"></span>
+          </mat-slide-toggle>
+        </div>
+        <div class="col-sm-3 mr_b10">
+          <mat-slide-toggle [color]="'primary'" formControlName="validateIpAddress" (change)="validIPToggle($event)">
+            <span style="font-weight: bold; font-size: 100%" jhiTranslate="cyfirmaweb.orgEdit.form.enableIPValidation"></span>
+          </mat-slide-toggle>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': securitykey.value }"
+            formControlName="securitykey"
+            placeholder="{{ 'cyfirmaweb.orgEdit.form.securityKey' | translate }}"
+            readonly
+            #securitykey
+          />
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (SECURITY KEY)_05FEB2021_V1 (PNG).png"
+          /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box" *ngIf="validateIpAddress == true">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': ipValidations.value }"
+            [ngClass]="{ 'ia field-dirty': ipValidations.value }"
+            formControlName="ipValidations"
+            placeholder="{{ 'cyfirmaweb.org.form.placeholder.iplist' | translate }}"
+            #ipValidations
+          />
+          <label class="il">{{ 'cyfirmaweb.org.form.placeholder.ips' | translate }}</label>
+        </div>
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn info"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="!newOrgForm.valid"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="data.action === 'orgDetails' || data.action == 'editOrgDetails'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label" jhiTranslate="cyfirmaweb.org.home.{{ data.label }}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="newOrgDetailsForm" (ngSubmit)="create('createOrgDetails')">
+    <div class="body box-shadow-woh col-inner">
+      <div class="row">
+        <div class="col-sm-3">
+          <!-- <input type="text" class="form-control" [ngClass]="{'ia field-dirty': orgName.value}" formControlName="key" placeholder="{{'cyfirmaweb.orgDetails.form.key' | translate}}"> -->
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (ATTRIBUTE)_05FEB2021_V1.png" /></label>
+          <mat-select
+            class="form-control"
+            formControlName="key"
+            (selectionChange)="onSelectionChange($event)"
+            placeholder="{{ 'cyfirmaweb.orgDetails.form.key' | translate }}"
+          >
+            <mat-option *ngFor="let key of orgKeys" [value]="key">
+              <span jhiTranslate="cyfirmaweb.orgDetails.form.{{ key }}"></span>
+            </mat-option>
+          </mat-select>
+        </div>
+
+        <div class="col-sm-9" *ngIf="newOrgDetailsForm.value.key === 'Industry'">
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (VALUE)_05FEB2021_V1.png" /></label>
+          <div class="form-group typeahead-box">
+            <jhi-type-ahead
+              [data]="gitFilterInfo.industry.list"
+              [filterOptions]="gitFilterInfo.industry.config"
+              (selectedOptionEmitter)="onOptionSelection($event)"
+            ></jhi-type-ahead>
+          </div>
+        </div>
+        <div class="col-sm-9" *ngIf="newOrgDetailsForm.value.key === 'Technology'">
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (VALUE)_05FEB2021_V1.png" /></label>
+          <div class="form-group typeahead-box">
+            <jhi-type-ahead
+              [data]="gitFilterInfo.technology.list"
+              [filterOptions]="gitFilterInfo.technology.config"
+              (selectedOptionEmitter)="onOptionSelection($event)"
+            ></jhi-type-ahead>
+          </div>
+        </div>
+        <div class="col-sm-9" *ngIf="newOrgDetailsForm.value.key === 'Geography'">
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (VALUE)_05FEB2021_V1.png" /></label>
+          <div class="form-group typeahead-box">
+            <jhi-type-ahead
+              [data]="gitFilterInfo.geography.list"
+              [filterOptions]="gitFilterInfo.geography.config"
+              (selectedOptionEmitter)="onOptionSelection($event)"
+            ></jhi-type-ahead>
+          </div>
+        </div>
+        <div class="col-sm-9" *ngIf="!newOrgDetailsForm.value.key || newOrgDetailsForm.value.key === 'People'">
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (VALUE)_05FEB2021_V1.png" /></label>
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgDetailsValue.value }"
+            formControlName="value"
+            placeholder="{{ 'cyfirmaweb.orgDetails.form.value' | translate }}"
+            #orgDetailsValue
+          />
+        </div>
+      </div>
+      <div class="row" *ngIf="newOrgDetailsForm.value.key === 'Industry'" style="padding-left: 21px">
+        <span class="fs12"><a style="color: red; font-size: 12px" (click)="downloadIndustryList()">Download Industry List</a></span>
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn info"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="!newOrgDetailsForm.valid"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+      <!-- <button type="submit" class="btn cust_btn info" [disabled]="!newOrgDetailsForm.valid">Submit</button> -->
+    </div>
+  </form>
+</div>
+
+<div *ngIf="data.action === 'createOrgUser'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label" jhiTranslate="cyfirmaweb.org.home.{{ data.label }}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="newOrgUserForm" (ngSubmit)="create('createOrgUser')">
+    <div class="body box-shadow-woh col-inner">
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgUserFirstName.value }"
+            formControlName="firstname"
+            placeholder="{{ 'cyfirmaweb.orgUsers.form.firstname' | translate }}"
+            #orgUserFirstName
+          />
+          <!-- <span class="err-msg"
+            *ngIf="newOrgUserForm.get('firstname').touched && newOrgUserForm.get('firstname').invalid">*
+            Field is required.</span> -->
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/FIRST_NAME.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgUserLastName.value }"
+            formControlName="lastname"
+            placeholder="{{ 'cyfirmaweb.orgUsers.form.lastname' | translate }}"
+            #orgUserLastName
+          />
+          <!-- <label class="il">{{'cyfirmaweb.orgUsers.form.lastname' | translate}} <img src="/cyfirmaweb/src/main/webapp/content/images/CYFIRMA-ICON-SET_05FEB2021_V1/ICONS W TEXT/CYFIRMA-HEADERS (FIRST NAME)_05FEB2021_V1 (PNG).png"> </label> -->
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/LAST_NAME.png" /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 cust_input_box" *ngIf="this.data.data">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgUserEmail.value }"
+            formControlName="email"
+            placeholder="{{ 'cyfirmaweb.orgUsers.form.email' | translate }}"
+            #orgUserEmail
+            readonly
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (EMAIL ADD)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box" *ngIf="!this.data.data">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgUserEmail.value }"
+            formControlName="email"
+            placeholder="{{ 'cyfirmaweb.orgUsers.form.email' | translate }}"
+            #orgUserEmail
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (EMAIL ADD)_02FEB2021.png" /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <input
+            style="user-select: auto; -webkit-user-select: auto"
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': orgUserPhone.value }"
+            formControlName="phone"
+            [matTooltip]="getErrorMessage('orgUser')"
+            [matTooltipDisabled]="patternMatch"
+            maxlength="15"
+            placeholder="{{ 'cyfirmaweb.orgUsers.form.phone' | translate }}"
+            #orgUserPhone
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON (PHONE)_02FEB2021.png" /></label>
+          <mat-error *ngIf="patternMatch">{{ getErrorMessage('orgUser') }}</mat-error>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA-HEADERS (SELECT ROLE)_05FEB2021_V1 (PNG).png"
+          /></label>
+          <select class="form-control" id="field_role" formControlName="roleOption">
+            <option value="" disabled selected jhiTranslate="cyfirmaweb.orgUsers.form.Select Role"></option>
+            <option
+              [ngValue]="roleOption"
+              *ngFor="let roleOption of roles"
+              jhiTranslate="cyfirmaweb.orgUsers.form.{{ roleOption.name }}"
+            ></option>
+          </select>
+        </div>
+        <div
+          class="col-sm-6"
+          style="display: flex; align-items: flex-end"
+          *ngIf="
+            this.data.data &&
+            (loggedinUserDet.roleType == 'Analyst' ||
+              loggedinUserDet.roleType == 'Sales' ||
+              loggedinUserDet.roleType == 'Admin' ||
+              isRootOrg == true) &&
+            (parentOrgId == loggedinUserDet.orgId || data.orgId == loggedinUserDet.orgId || isRootOrg == true)
+          "
+        >
+          <div class="radio-group">
+            <mat-radio-group class="radio-group" formControlName="status">
+              <mat-radio-button class="radio-button pdr-10" [value]="status" *ngFor="let status of ['Active', 'Inactive']">{{
+                status
+              }}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <!-- <div class="col-sm-6 cust_input_box">
+            <select class="form-control" id="field_org" formControlName="orgOption">
+                <option [ngValue]="orgOption" *ngFor="let orgOption of orgs; trackBy: trackOrgById">{{orgOption.name}}</option>
+            </select>
+          </div> -->
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn info"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="!newOrgUserForm.valid"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="data.action === 'createOrgAssets'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label" jhiTranslate="cyfirmaweb.org.home.{{ data.label }}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="newOrgAssetsForm" (ngSubmit)="create('createOrgAssets')">
+    <div class="body box-shadow-woh col-inner">
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            (cut)="handleCPECut($event)"
+            [ngClass]="{ 'ia field-dirty': cpe.value }"
+            formControlName="cpe"
+            placeholder="CPE"
+            #cpe
+          />
+          <label class="il">
+            <img src="../../../content/images/icon_img/ICONS_W_TEXT/CYFIRMA_ICON_CPE_02JUN2022.png" />
+          </label>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <button type="button" class="btn cust_btn" *ngIf="newOrgAssetsForm.dirty && data.data" (click)="resetFormData()">Reset</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 cust_input_box">
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <mat-select
+            class="form-control"
+            placeholder="{{ 'cyfirmaweb.orgAssets.form.category' | translate }}"
+            formControlName="assettype"
+            #assettype
+            (selectionChange)="handleAssetFormDataChange($event)"
+          >
+            <mat-option *ngFor="let asset of orgAssetsList" [value]="asset">
+              <span jhiTranslate="cyfirmaweb.orgDetails.form.{{ asset }}"></span>
+            </mat-option>
+          </mat-select>
+          <!-- <input type="text" class="form-control" [ngClass]="{'ia field-dirty': assetType.value}"
+            formControlName="assettype" placeholder="{{'cyfirmaweb.orgAssets.form.category' | translate}}" #assetType>
+          <label class="il">Category</label> -->
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': vendor.value }"
+            formControlName="vendor"
+            placeholder="{{ 'cyfirmaweb.orgAssets.form.vendor' | translate }}"
+            #vendor
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (VENDOR)_05FEB2021_V1.png" /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': assetName.value }"
+            formControlName="assetname"
+            placeholder="{{ 'cyfirmaweb.orgAssets.form.assetname' | translate }}"
+            #assetName
+          />
+          <label class="il"
+            ><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (ASSET-SOFTWARE NAME)_05FEB2021_V1.png"
+          /></label>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': assetVersion.value }"
+            formControlName="version"
+            placeholder="{{ 'cyfirmaweb.orgAssets.form.version' | translate }}"
+            #assetVersion
+          />
+          <label class="il"><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (VERSIONS)_05FEB2021_V1.png" /></label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': comments.value }"
+            formControlName="comments"
+            placeholder="{{ 'cyfirmaweb.orgDetails.form.Comments/Notes' | translate }}"
+            #comments
+          />
+          <label class="il">{{ 'cyfirmaweb.orgDetails.form.Comments/Notes' | translate }}</label>
+        </div>
+        <div class="col-sm-6 mr_b10">
+          <mat-slide-toggle [color]="'primary'" formControlName="cpematch" #cpematch>
+            <span style="font-weight: bold">Mark as Valid</span>
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn info"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="!newOrgAssetsForm.valid"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+    </div>
+  </form>
+</div>
+
+<div id="form-container" *ngIf="data.action === 'createDataBreachAsset'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label" jhiTranslate="cyfirmaweb.org.home.{{ data.label }}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="dataBreachAssetsForm" (ngSubmit)="create(data.action)">
+    <div class="body box-shadow-woh col-inner">
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <mat-select
+            [disabled]="data.data"
+            placeholder="{{ 'cyfirmaweb.orgDetails.form.Select Category' | translate }}"
+            formControlName="assettype"
+            (selectionChange)="updateSocialGroup()"
+          >
+            <mat-option *ngFor="let assetType of dataBreachAssetTypes" [value]="assetType">
+              <span jhiTranslate="cyfirmaweb.orgDetails.form.{{ assetType }}"></span>
+            </mat-option>
+          </mat-select>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="{ 'ia field-dirty': location.value }"
+              formControlName="location"
+              placeholder="{{ 'cyfirmaweb.orgDetails.form.Comments/Notes' | translate }}"
+              #location
+            />
+            <label class="il">{{ 'cyfirmaweb.orgDetails.form.Comments/Notes' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="{ 'ia field-dirty': assetName.value }"
+              formControlName="assetname"
+              placeholder="{{ 'cyfirmaweb.orgDetails.form.Signature' | translate }}"
+              [readonly]="data.data"
+              #assetName
+            />
+            <label class="il"
+              ><img src="../../../content/images/icon_img/ICONS_W_TEXT/Cyfirma-Header (SIGNATURE)_08FEB2021_V1.png"
+            /></label>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Mobile App'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+            >{{ 'cyfirmaweb.orgDetails.form.mobileAppMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Project Name'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.projectNameMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'File Name'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.fileNameMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Department Name'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.departmentMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Individuals Name'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.individualsMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Email Address'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.emailMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'IP'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.ipMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'Software'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.softwareMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Source Code File Name'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.sourceCodeMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Copyright Information'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.copyRightInfoMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'Twitter'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.twitterMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'Facebook'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.faceBookMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'LinkedIn'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.linkedInMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Product Name'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.productNameMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'ASN'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.asnMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'YouTube'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.youTubeMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Intellectual Property'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.intellectualPropertyMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'Domain'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.domainMessage' | translate }}</span
+          >
+          <span
+            *ngIf="dataBreachAssetsForm.value.assettype === 'Service Name'"
+            style="color: red; font-size: 10px"
+            class="ng-star-inserted"
+          >
+            {{ 'cyfirmaweb.orgDetails.form.serviceNameMessage' | translate }}</span
+          >
+          <span *ngIf="dataBreachAssetsForm.value.assettype === 'Others'" style="color: red; font-size: 10px" class="ng-star-inserted">
+            {{ 'cyfirmaweb.orgDetails.form.othersMessage' | translate }}</span
+          >
+        </div>
+      </div>
+      <div id="social-handler-form" class="row" *ngIf="['Product Name', 'Individuals Name'].includes(dataBreachAssetsForm.value.assettype)">
+        <div class="col-12">
+          <br />
+          <hr />
+        </div>
+        <div class="col-12">
+          <div class="row">
+            <div class="col-sm-4 cust_input_box">
+              <mat-select placeholder="Select Social" [(ngModel)]="tempSocial.social" [ngModelOptions]="{ standalone: true }">
+                <mat-option value="">Select Option</mat-option>
+                <mat-option *ngFor="let social1 of socialGroups" [value]="social1">
+                  <span jhiTranslate="cyfirmaweb.orgDetails.form.{{ social1 }}"></span>
+                </mat-option>
+              </mat-select>
+            </div>
+            <div class="col-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Value"
+                [(ngModel)]="tempSocial.value"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </div>
+            <div class="col-2">
+              <span (click)="saveSocialHandler()" matTooltip="Add / Update" [matTooltipPosition]="'above'">
+                <i class="material-icons edit">add</i> <span>Add/Update</span>
+              </span>
+              <!-- <span (click)="remove(item.id)" matTooltip="Delete" [matTooltipPosition]="'above'">
+                <i class="material-icons dc">delete_sweep</i>
+              </span> -->
+            </div>
+          </div>
+          <div class="col-12">
+            <ul>
+              <li *ngFor="let item of tempKeys">
+                <div class="table-wrapper">
+                  <div style="width: 100px" class="table_cell">{{ item }} :</div>
+                  <div style="width: 250px; max-width: 250px" class="table_cell txt-wrap">{{ socialHandlerIds[item] }}</div>
+                  <div class="table_cell">
+                    <span (click)="editSocialHandler(item)" matTooltip="Edit" [matTooltipPosition]="'above'">
+                      <i class="material-icons edit">edit</i>
+                    </span>
+                    <span (click)="removeSocialHandler(item)" matTooltip="Delete" [matTooltipPosition]="'above'">
+                      <i class="material-icons delete">delete_sweep</i>
+                    </span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn info"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="!dataBreachAssetsForm.valid"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="data.action === 'setupReports'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label" jhiTranslate="cyfirmaweb.orgEdit.form.{{ data.label }}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="setupReportForm" (ngSubmit)="create('setupReports')">
+    <div class="body box-shadow-woh col-inner">
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <select class="form-control" formControlName="typeOfReport">
+            <option value="" selected jhiTranslate="cyfirmaweb.org.home.selectType"></option>
+            <option value="File">File</option>
+            <option value="Html">Html</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-6 cust_input_box pdt-39">
+          <select class="form-control" placeholder="Select Type of Report" formControlName="reportType" (change)="clearSubReportType()">
+            <option value="" jhiTranslate="cyfirmaweb.org.home.selectReportType"></option>
+            <option *ngFor="let reportTypesOption of reportTypes" [ngValue]="reportTypesOption">
+              {{ reportTypesOption.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-6 cust_input_box" *ngIf="setupReportForm.value.reportType.name !== 'Adhoc'">
+          <ngb-timepicker formControlName="defaultTime" [meridian]="true"></ngb-timepicker>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-6 cust_input_box pdt-39" *ngIf="setupReportForm.value.reportType.name === 'Adhoc'">
+          <select class="form-control" placeholder="Select Sub Category" formControlName="subCategoryId">
+            <option value="">-- Select Sub Category --</option>
+            <option *ngFor="let subcategoryOption of subCategory" [value]="subcategoryOption.id">
+              {{ subcategoryOption.name }}
+            </option>
+          </select>
+        </div>
+        <div
+          class="col-sm-6 cust_input_box pdt-39"
+          *ngIf="setupReportForm.value.reportType.name && setupReportForm.value.reportType.name !== 'Adhoc'"
+        >
+          <select class="form-control" placeholder="Select Sub Type" formControlName="subTypeId">
+            <option value="">-- Select Sub Type --</option>
+            <option *ngFor="let subTypeOption of subType" [value]="subTypeOption.id">
+              {{ subTypeOption.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-12" *ngIf="setupReportForm.value.typeOfReport === 'Html'" style="color: rgb(239, 12, 12)">
+        Please add only those email ids that are not registered with Cyfirma and that need to receive the email. Email id of the registered
+        users will be automatically picked up.
+      </div>
+      <div class="line_gap"></div>
+      <div class="line_gap"></div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control ia"
+              [ngClass]="{ 'ia field-dirty': dataBreachEmail.value }"
+              formControlName="email"
+              placeholder="{{ 'cyfirmaweb.org.home.emailAddress' | translate }}"
+              style="height: 70px"
+              #dataBreachEmail
+            />
+            <label class="il">{{ 'cyfirmaweb.org.home.emailAddress' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-6 cust_input_box" *ngIf="setupReportForm.value.reportType.name !== 'Adhoc'">
+          <select class="form-control" id="field_role" formControlName="frequency">
+            <option value="" selected>Select Frequency</option>
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+          </select>
+        </div>
+        <div class="col-sm-6 cust_input_box" *ngIf="setupReportForm.value.frequency === 'Weekly'">
+          <select class="form-control" formControlName="day">
+            <option value="" selected>Select Day</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control ia"
+              [ngClass]="{ 'ia field-dirty': cc.value }"
+              formControlName="cc"
+              placeholder="{{ 'cyberedu.emailTemplate.forms.cc' | translate }}"
+              #cc
+            />
+            <label class="il">{{ 'cyberedu.emailTemplate.forms.cc' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control ia"
+              [ngClass]="{ 'ia field-dirty': bcc.value }"
+              formControlName="bcc"
+              placeholder="{{ 'cyberedu.emailTemplate.forms.bcc' | translate }}"
+              #bcc
+            />
+            <label class="il">{{ 'cyberedu.emailTemplate.forms.bcc' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control ia"
+              [ngClass]="{ 'ia field-dirty': subject.value }"
+              formControlName="subject"
+              placeholder="{{ 'cyfirmaweb.org.home.subject' | translate }}"
+              #subject
+            />
+            <label class="il">{{ 'cyfirmaweb.org.home.subject' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-12">
+          <ckeditor formControlName="body">
+            <ckbutton [name]="'saveButton'" [command]="'saveCmd'" [icon]="'save.png'" [label]="'Save Document'" [toolbar]="'clipboard,1'">
+            </ckbutton>
+          </ckeditor>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'Html'">
+        <div class="col-sm-12 info-msg">
+          <!-- <p>Use token @FREQUENCY where you want the frequency(Daily/Weekly) to come.</p>
+          <p>Token @FREQUENCY not required in case of Adhoc Reports.</p>
+          <p>Use token @NAME where you want the customer name to come.</p>
+          <p>Use token @PRODUCT where you want the product name to come.</p>
+          <p>Use token @LINK where you want the link to come.</p> -->
+          <p class="txt-aln" jhiTranslate="cyfirmaweb.org.home.tokenTemplate"></p>
+          <p>@FREQUENCY - Daily/Weekly</p>
+          <p>@NAME - Customer Name</p>
+          <p>@PRODUCT - Product Name</p>
+          <p>@WSU-SECTIONS - Add Weekly Security Update Section Names</p>
+          <!-- <p>@LINK - Product name</p> -->
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-6 cust_input_box pdt-39">
+          <select class="form-control" placeholder="Select Type of Report" formControlName="reportType">
+            <option value="" jhiTranslate="cyfirmaweb.org.home.selectReportType"></option>
+            <option *ngFor="let reportTypesOption of reportTypes" [ngValue]="reportTypesOption">
+              {{ reportTypesOption.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-6 cust_input_box pdt-39" *ngIf="setupReportForm.value.reportType">
+          <select class="form-control" placeholder="Select Sub Type" formControlName="subTypeId">
+            <option value="">-- Select Sub Type --</option>
+            <option *ngFor="let subTypeOption of subType" [value]="subTypeOption.id">
+              {{ subTypeOption.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-12" *ngIf="setupReportForm.value.typeOfReport === 'File'" style="color: rgb(239, 12, 12)">
+        Please add only those email ids that are not registered with Cyfirma and that need to receive the email. Email id of the registered
+        users will be automatically picked up.
+      </div>
+      <div class="line_gap"></div>
+      <div class="line_gap"></div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="email"
+              class="form-control ia"
+              multiple
+              pattern="^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4},*[\W]*)+$"
+              value=""
+              [ngClass]="{ 'ia field-dirty': dataBreachEmail.value }"
+              formControlName="email"
+              placeholder="{{ 'cyfirmaweb.org.home.emailAddress' | translate }}"
+              style="height: 70px"
+              #dataBreachEmail
+            />
+            <label class="il">{{ 'cyfirmaweb.org.home.emailAddress' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="email"
+              class="form-control ia"
+              multiple
+              pattern="^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4},*[\W]*)+$"
+              value=""
+              [ngClass]="{ 'ia field-dirty': cc.value }"
+              formControlName="cc"
+              placeholder="{{ 'cyberedu.emailTemplate.forms.cc' | translate }}"
+              #cc
+            />
+            <label class="il">{{ 'cyberedu.emailTemplate.forms.cc' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="email"
+              class="form-control ia"
+              multiple
+              pattern="^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4},*[\W]*)+$"
+              value=""
+              multiple
+              [ngClass]="{ 'ia field-dirty': bcc.value }"
+              formControlName="bcc"
+              placeholder="{{ 'cyberedu.emailTemplate.forms.bcc' | translate }}"
+              #bcc
+            />
+            <label class="il">{{ 'cyberedu.emailTemplate.forms.bcc' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-12">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control ia"
+              [ngClass]="{ 'ia field-dirty': subject.value }"
+              formControlName="subject"
+              placeholder="{{ 'cyfirmaweb.org.home.subject' | translate }}"
+              #subject
+            />
+            <label class="il">{{ 'cyfirmaweb.org.home.subject' | translate }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-12">
+          <ckeditor formControlName="body">
+            <ckbutton [name]="'saveButton'" [command]="'saveCmd'" [icon]="'save.png'" [label]="'Save Document'" [toolbar]="'clipboard,1'">
+            </ckbutton>
+          </ckeditor>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-12 info-msg">
+          <!-- <p>Use token @FREQUENCY where you want the frequency(Daily/Weekly) to come.</p>
+            <p>Token @FREQUENCY not required in case of Adhoc Reports.</p>
+            <p>Use token @NAME where you want the customer name to come.</p>
+            <p>Use token @PRODUCT where you want the product name to come.</p>
+            <p>Use token @LINK where you want the link to come.</p> -->
+          <p class="txt-aln" jhiTranslate="cyfirmaweb.org.home.tokenTemplate"></p>
+          <p>@FREQUENCY - Daily/Weekly</p>
+          <p>@NAME - Customer Name</p>
+          <p>@PRODUCT - Product Name</p>
+          <!-- <p>@PASSWORD - Password to open the file</p> -->
+          <!-- <p>@LINK - Product name</p> -->
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-6 mr_b10">
+          <mat-checkbox formControlName="passwordProtect">
+            <span jhiTranslate="cyfirmaweb.org.home.passwordProtect"></span>
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="row" *ngIf="setupReportForm.value.typeOfReport === 'File'">
+        <div class="col-sm-6 mr_b10" *ngIf="setupReportForm.value.passwordProtect === true">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control ia"
+              [ngClass]="{ 'ia field-dirty': password.value }"
+              formControlName="password"
+              placeholder="{{ 'cyfirmaweb.filereport.form.placeholder.password' | translate }}"
+              #password
+            />
+            <label class="il">{{ 'cyfirmaweb.filereport.form.placeholder.password' | translate }}</label>
+          </div>
+        </div>
+        <div class="col-sm-6 mr_b10" *ngIf="setupReportForm.value.passwordProtect === true">
+          <mat-checkbox formControlName="passwordMailSend">Do you want to send password in a separate mail? </mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn info"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="checkSetupReportsValiddation()"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+    </div>
+  </form>
+</div>
+<div class="content-box" style="height: 78vh" *ngIf="data.action === 'ViewReports'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18 title-label">{{ data.label }}</div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <div class="body box-shadow-woh col-inner">
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <h5>Name :</h5>
+        <span class="desc">{{ data.data.reportTypeName }}</span>
+      </div>
+      <div class="col-12 col-md-4">
+        <h5>Subject :</h5>
+        <span *ngFor="let template of data.data.templateIds; let i = index">{{ template.subject }}</span>
+      </div>
+      <div class="col-12 col-md-12 mr_t10">
+        <h5>Template :</h5>
+        <span *ngFor="let template of data.data.templateIds; let i = index" [innerHTML]="template.body"></span>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <button type="reset" class="btn cust_btn info" (click)="closeDialog()" matDialogClose>Close</button>
+  </div>
+</div>
+
+<div class="dialog-form-container" *ngIf="data.action === 'addClientsFeeds'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18 title-label">{{ data.label }}</div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="clientFeedsForm">
+    <div class="body box-shadow-woh col-inner mrb-10">
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field class="form-control cust_mat_form_field">
+            <mat-select formControlName="type">
+              <mat-option [value]="">Select Feeds Type</mat-option>
+              <mat-option *ngFor="let ft of feedsTypes" [value]="ft.value">
+                {{ ft.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-9 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': clientFeeds.value }"
+            formControlName="source"
+            placeholder="Enter source"
+            #clientFeeds
+          />
+          <label class="il">Feeds</label>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button type="reset" class="btn cust_btn info" (click)="closeDialog()">Cancel</button>
+      <button type="submit" class="btn cust_btn success mrl-5" [disabled]="!clientFeedsForm.valid" [matDialogClose]="clientFeedsForm.value">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+<!-- /client feed setup form -->
+<div *ngIf="data.action === 'drd-domain'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18 title-label">{{ data.label }}</div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="drdDomainForm" (ngSubmit)="create(data.action)">
+    <div class="body box-shadow-woh col-inner mrb-10">
+      <div class="row mrb-10">
+        <div class="col-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdDomainName.value }"
+            formControlName="name"
+            placeholder="Enter Name"
+            #drdDomainName
+          />
+          <label class="il">Name</label>
+        </div>
+        <div class="col-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdDomainValue.value }"
+            formControlName="domain"
+            placeholder="Enter Domain"
+            #drdDomainValue
+            required
+          />
+          <label class="il">Domain</label>
+        </div>
+      </div>
+      <div class="row mrb-10">
+        <div class="col-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdDomainCP.value }"
+            formControlName="contactPerson"
+            placeholder="Enter Contact Person"
+            #drdDomainCP
+          />
+          <label class="il">Contact Person</label>
+        </div>
+        <div class="col-6 cust_input_box">
+          <input
+            type="email"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdDomainEmail.value }"
+            formControlName="email"
+            placeholder="Enter Email"
+            #drdDomainEmail
+            required
+          />
+          <label class="il">Email</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field class="form-control cust_mat_form_field">
+            <mat-select formControlName="type">
+              <mat-option [value]="">Select User Type</mat-option>
+              <mat-option [value]="'Premium'">Premium</mat-option>
+              <mat-option [value]="'Normal'">Normal</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field class="form-control cust_mat_form_field">
+            <mat-select formControlName="company" #companyValue (change)="changeCompany($any($event).value)">
+              <mat-option [value]="">Select Company </mat-option>
+              <mat-option *ngFor="let ft of companies; let i = index" [value]="i">
+                {{ ft.companyName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button type="reset" class="btn cust_btn info" (click)="closeDialog()">Cancel</button>
+      <button type="submit" class="btn cust_btn success" [disabled]="!drdDomainForm.valid">Submit</button>
+    </div>
+  </form>
+</div>
+<!-- /drd domain -->
+<!-- drd company DEC-1175-->
+<div *ngIf="data.action === 'drd-company'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18 title-label">{{ data.label }}</div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="drdCompanyForm" (ngSubmit)="create(data.action)">
+    <div class="body box-shadow-woh col-inner mrb-10">
+      <div class="row mrb-10">
+        <div class="col-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdCompanyName.value }"
+            formControlName="name"
+            placeholder="Enter Name"
+            #drdCompanyName
+          />
+          <label class="il">Name</label>
+        </div>
+        <div class="col-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdCompanyUrl.value }"
+            formControlName="url"
+            placeholder="Enter Domain"
+            #drdCompanyUrl
+            required
+          />
+          <label class="il">Url</label>
+        </div>
+      </div>
+      <div class="row mrb-10">
+        <div class="col-6 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdCompanyCP.value }"
+            formControlName="contactPerson"
+            placeholder="Enter Contact Person"
+            #drdCompanyCP
+          />
+          <label class="il">Contact Person</label>
+        </div>
+        <div class="col-6 cust_input_box">
+          <input
+            type="email"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': drdCompanyEmail.value }"
+            formControlName="email"
+            placeholder="Enter Email"
+            #drdCompanyEmail
+            required
+          />
+          <label class="il">Email</label>
+        </div>
+      </div>
+      <div class="col-6 cust_input_box">
+        <input
+          type="text"
+          class="form-control"
+          [ngClass]="{ 'ia field-dirty': drdCompanyAddress.value }"
+          formControlName="address"
+          placeholder="Enter Address"
+          #drdCompanyAddress
+          required
+        />
+        <label class="il">Address</label>
+      </div>
+      <div
+        class="col-sm-6"
+        style="display: flex; align-items: flex-end"
+        *ngIf="
+          this.data.data &&
+          (loggedinUserDet.roleType == 'Analyst' ||
+            loggedinUserDet.roleType == 'Sales' ||
+            loggedinUserDet.roleType == 'Admin' ||
+            isRootOrg == true) &&
+          (parentOrgId == loggedinUserDet.orgId || data.orgId == loggedinUserDet.orgId || isRootOrg == true)
+        "
+      >
+        <div class="radio-group">
+          <mat-radio-group class="radio-group" formControlName="status">
+            <mat-radio-button
+              class="radio-button pdr-10"
+              [value]="status"
+              #drdCompanyStatus
+              [ngClass]="{ 'ia field-dirty': drdCompanyStatus.value }"
+              *ngFor="let status of ['Active', 'Inactive']"
+            >
+              {{ status }}</mat-radio-button
+            >
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button type="reset" class="btn cust_btn info" (click)="closeDialog()">Cancel</button>
+      <button type="submit" class="btn cust_btn success" [disabled]="!drdCompanyForm.valid">Submit</button>
+    </div>
+  </form>
+</div>
+<!--DRD END-->
+<div *ngIf="data.action === 'drd-domain-keywords'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18 title-label">{{ data.label }}</div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="drdDomainKeywordsForm" (ngSubmit)="create(data.action)">
+    <div class="body box-shadow-woh col-inner mrb-10">
+      <div class="row">
+        <div class="col-sm-6 cust_input_box">
+          <select class="form-control" id="drdKeywordType" formControlName="assetType" required>
+            <option value="" selected>Select Category</option>
+            <option *ngFor="let drdKeyword of domainKeywordsOptions" [value]="drdKeyword">{{ drdKeyword }}</option>
+          </select>
+        </div>
+        <div class="col-sm-6 cust_input_box">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="{ 'ia field-dirty': assetName.value }"
+              formControlName="assetName"
+              placeholder="Signature"
+              #assetName
+            />
+            <label class="il">Signature</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- <div class="col-sm-6 cust_input_box">
+          <div class="cust_input_box">
+            <input type="text" class="form-control" [ngClass]="{'ia field-dirty': drdVersion.value}"
+              formControlName="version" placeholder="Version" #drdVersion>
+            <label class="il">Version</label>
+          </div>
+        </div> -->
+        <div class="col-sm-6 cust_input_box">
+          <div class="cust_input_box">
+            <input
+              type="text"
+              class="form-control"
+              [ngClass]="{ 'ia field-dirty': location.value }"
+              formControlName="location"
+              placeholder="Location"
+              #location
+            />
+            <label class="il">Location</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button type="reset" class="btn cust_btn info" (click)="closeDialog()">Cancel</button>
+      <button type="submit" class="btn cust_btn success" [disabled]="!drdDomainKeywordsForm.valid">Submit</button>
+    </div>
+  </form>
+</div>
+<div *ngIf="data.action === 'drd-domain-keywords-check'">
+  <div>
+    <span class="spanHeading">Digital Risk Configuration</span> <span class="closedivBtn" (click)="closeDialog()">&times;</span>
+    <form class="dialog-form-wrapper" [formGroup]="drdDomainKeywordsCheckForm">
+      <div class="row fh">
+        <h2 style="padding-left: 15px; margin: 20px 0"><b class="title-label">Impersonation</b></h2>
+        <div class="col-12 fh">
+          <div class="row">
+            <div class="col-sm-2 mr_b10">
+              <mat-checkbox
+                [checked]="digitalriskCheckDetails?.impersonation?.hideOrganizationDomains"
+                [ngClass]="{ 'ia field-dirty': domainsimilartoorganization.value }"
+                formControlName="domainsimilartoorganization"
+                #domainsimilartoorganization
+              >
+                Hide Domain Similar to Organization Name</mat-checkbox
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn cust_btn info divSubmitBtn" (click)="domainPost(drdDomainKeywordsCheckForm)">Submit</button>
+    </form>
+  </div>
+</div>
+<!-- /drd domain keywords -->
+<div *ngIf="data.action === 'createReportConfig'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label" jhiTranslate="cyfirmaweb.orgEdit.form.{{ data.label }}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="setupReportConfigForm" (ngSubmit)="create('createReportConfig')">
+    <div class="body box-shadow-woh col-inner" style="min-height: 300px">
+      <div class="row">
+        <div class="col-sm-6">
+          <mat-form-field>
+            <mat-select
+              placeholder="{{ 'cyfirmaweb.reportsConfig.form.selectconfigkey' | translate }}"
+              formControlName="configKey"
+              (selectionChange)="getOrgList()"
+            >
+              <mat-option value=""><span jhiTranslate="cyfirmaweb.reportsConfig.form.selectconfigkey"></span> </mat-option>
+              <mat-option
+                *ngFor="let key of ['daily_report_create_time','daily_report_schedule_time','daily_reports','weekly_alerts', 'report_client_exclusion']"
+                [value]="key"
+              >
+                {{ key }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-6" *ngIf="setupReportConfigForm.value.configKey === 'daily_report_schedule_time'">
+          <mat-select class="form-control" placeholder="Select Report Type" formControlName="reportType">
+            <mat-option *ngFor="let reportTypesOption of reportTypes" [value]="reportTypesOption.name">
+              <span>{{ reportTypesOption.name }}</span>
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="row">
+        <div
+          class="col-sm-6"
+          *ngIf="
+            setupReportConfigForm.value.configKey === 'daily_report_create_time' ||
+            setupReportConfigForm.value.configKey === 'daily_report_schedule_time'
+          "
+        >
+          <ngb-timepicker formControlName="defaultTime" [meridian]="true"></ngb-timepicker>
+        </div>
+        <div class="col-sm-6" *ngIf="setupReportConfigForm.value.configKey === 'daily_reports'">
+          <div class="radio-group" style="margin-top: 6px">
+            <mat-radio-group class="radio-group" formControlName="status">
+              <mat-radio-button class="radio-button" [value]="status" *ngFor="let status of ['Yes', 'No']"> {{ status }}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="col-sm-6" *ngIf="setupReportConfigForm.value.configKey === 'weekly_alerts'">
+          <div class="radio-group" style="margin-top: 6px;">
+            <mat-radio-group class="radio-group" formControlName="status">
+              <mat-radio-button class="radio-button" [value]="status" *ngFor="let status of ['Yes', 'No']">
+                {{status}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="col-sm-12" *ngIf="setupReportConfigForm.value.configKey === 'weekly_alerts' && setupReportConfigForm.value.status==='Yes'">
+          <ckeditor formControlName="emailTemplate">
+          </ckeditor>
+        </div>
+  
+
+        <div class="col-sm-6" *ngIf="setupReportConfigForm.value.configKey === 'report_client_exclusion'">
+          <mat-select class="form-control" placeholder="Select Report Type" formControlName="reportType">
+            <mat-option *ngFor="let reportTypesOption of reportTypes" [value]="reportTypesOption.name">
+              <span>{{ reportTypesOption.name }}</span>
+            </mat-option>
+          </mat-select>
+        </div>
+        <div class="col-sm-6" *ngIf="setupReportConfigForm.value.configKey === 'report_client_exclusion'">
+          <mat-select class="form-control" placeholder="Select Exclusion Clients" formControlName="orgIds" multiple>
+            <mat-option *ngFor="let org of orgsNames" [value]="org.id">
+              <span>{{ org.name }}</span>
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn info"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="!setupReportConfigForm.valid"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+    </div>
+  </form>
+</div>
+<!-- /report config-->
+<div *ngIf="data.action === 'third-party-domain'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class="title-label">{{ data.label }}</span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog()">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <form style="height: 100%" class="content-box" [formGroup]="tpdForm" (ngSubmit)="create('addTPD')">
+    <div class="body box-shadow-woh col-inner">
+      <div class="row">
+        <div class="col-sm-12 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': tpdDomain.value }"
+            [readonly]="data.data"
+            formControlName="assetname"
+            placeholder="{{ 'cyfirmaweb.orgTPD.form.tpd' | translate }}"
+            #tpdDomain
+          />
+          <label class="il"><img src="https://db25dv50edmh2.cloudfront.net/CYFIRMA_icon_Domain_v1.png" /></label>
+        </div>
+        <div class="col-sm-12 cust_input_box">&nbsp;</div>
+        <div class="col-sm-12 cust_input_box">
+          <input
+            type="text"
+            class="form-control"
+            [ngClass]="{ 'ia field-dirty': tpdDomain.value }"
+            formControlName="comment"
+            placeholder="{{ 'cyfirmaweb.orgTPD.form.location' | translate }}"
+            #tpdDomain
+          />
+        </div>
+        <div class="col-sm-12 cust_input_box">&nbsp;</div>
+      </div>
+    </div>
+    <div class="line_gap"></div>
+    <div class="footer">
+      <button
+        type="reset"
+        class="btn cust_btn default"
+        (click)="closeDialog()"
+        matDialogClose
+        jhiTranslate="cyfirmaweb.orgDetails.form.cancel"
+      ></button>
+      <button
+        type="submit"
+        class="btn cust_btn info"
+        [disabled]="!tpdForm.valid"
+        jhiTranslate="cyfirmaweb.orgDetails.form.submitt"
+      ></button>
+    </div>
+  </form>
+</div>
+<!-- /third party domain-->
+<!-- Company Logo -->
+<div *ngIf="data.action === 'logoDialog'">
+  <div class="header">
+    <div class="table_row">
+      <div class="table_cell fs18">
+        <span class=" title-label" jhiTranslate="cyfirmaweb.org.home.{{data.label}}"></span>
+      </div>
+      <div class="table_cell close" (click)="closeDialog(logoUpdated)">
+        <i class="material-icons">clear</i>
+      </div>
+    </div>
+  </div>
+  <div style="height: 100%;" class="content-box" >
+    <div class="row">
+      <div class="col-12">
+        <!-- <input type='file' (change)="onSelectLogo($event)" accept="image/png"/> -->
+        <div class="cp" id="drop_zone">
+          <label style=" height: 75px; padding: 1.5em;" for="dnd" jhiFileDrop
+            (filesChangeEmiter)="onSelectLogo($event, true)" [allowed_extensions]="['png']">
+            <span jhiTranslate="global.commons.dropFile"></span>
+            <input type="file" id="dnd" (change)="onSelectLogo($event, false)" accept="image/png">
+          </label>
+        </div>
+        <p style="font-size: 12px; color: red; text-align: center;">*Only PNG Files allowed & Size restriction of 64KB.</p>
+        <div *ngIf="logoUrl" style="height: 100px; text-align: center;">
+          <h1 style="font-size: 16px;">Image Preview</h1>
+          <img style="max-height: 80px;width: auto;border: 1px solid #AAA;margin-bottom: 10px;" [src]="logoUrl"/>
+          <br/>
+          <button class="btn cust_btn info" (click)="previewLogo()">
+            <i class="material-icons">remove_red_eye</i>Preview Logo
+          </button>
+          <button class="btn cust_btn info" (click)="uploadLogo()" [disabled]="tmpImage == null">
+            <i class="material-icons">upload</i>Upload Logo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

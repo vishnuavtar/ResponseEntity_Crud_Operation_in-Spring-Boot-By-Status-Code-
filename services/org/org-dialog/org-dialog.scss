@@ -1,0 +1,141 @@
+.header {
+  margin-bottom: 10px;
+}
+.body .row {
+  margin-bottom: 12px;
+}
+.footer {
+  text-align: right;
+  padding-top: 10px;
+}
+.close {
+  width: 50px;
+  text-align: center;
+  cursor: pointer;
+}
+.close:hover i {
+  color: #da0f0ffa;
+  transition: all 0.3s linear;
+}
+::ng-deep .txt-aln span {
+  color: black !important;
+  margin-left: -25px;
+}
+.info-msg {
+  text-align: left;
+  padding: 10px 35%;
+  background: #f2da9c;
+  font-weight: 600;
+}
+.info-msg .hl {
+  color: #cb1f2c;
+}
+::ng-deep .ngb-tp {
+  margin-top: 13px;
+  margin-left: 15px;
+}
+.pdt-39 {
+  padding-top: 39px;
+}
+.typeahead-box {
+  border: 1px solid #ccc;
+  height: 40px;
+  overflow: hidden;
+}
+::ng-deep .cust_mat_form_field.mat-form-field {
+  padding-top: 0px !important;
+  .mat-form-field-infix {
+    border-top: none !important;
+    .mat-form-field-label-wrapper {
+      top: -1.1em !important;
+    }
+  }
+}
+textarea:hover {
+  outline: none;
+  box-shadow: none !important;
+  border-color: inherit;
+}
+textarea:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #a3c7e7;
+  outline: 0;
+}
+.cust_btn.default,
+.cust_btn.info {
+  height: 33px !important;
+}
+.content-wrapper .header {
+  height: 45px;
+  width: 100%;
+  padding: 5px 10px;
+  background: #ffffff;
+}
+.mat-select {
+  height: 40px !important;
+}
+.content-box .col-inner img {
+  max-width: 100%;
+  height: 17px !important;
+}
+
+.dialog-form-container {
+  height: 100%;
+  form {
+    height: calc(100% - 37px);
+    .body {
+      height: calc(100% - 42px);
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .footer {
+      float: left;
+      width: 100%;
+    }
+  }
+}
+.closedivBtn {
+  float: right;
+  font-size: 30px;
+  cursor: pointer;
+}
+.divSubmitBtn {
+  margin-left: 15px;
+  margin-top: 30px;
+  float: right;
+}
+.spanHeading {
+  font-size: 18px;
+  font-weight: bolder;
+}
+.disabled {
+  opacity: 1.2 !important;
+  pointer-events: none;
+}
+.dt {
+  ::ng-deep {
+    .disabled {
+      opacity: 1.2 !important;
+      pointer-events: none;
+    }
+  }
+}
+
+
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element {
+  background-color: #002c63 !important;
+}
+
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #002c63!important;   /*inner circle color change*/
+}
+
+::ng-deep.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+ border-color:#002c63!important; /*outer ring color change*/
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #002c63 !important;
+}

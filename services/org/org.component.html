@@ -1,0 +1,261 @@
+<div class="content-wrapper">
+  <div class="header" style="display: none">
+    <div class="table_row main-header">
+      <img class="cp" height="50" src="../../content/images/brand_logo.png" [routerLink]="'/home'" />
+      <div class="midd-section" style="padding-left: 0">
+        <a (click)="reload()">
+          <span class="uppercase htf" jhiTranslate="cyfirmaweb.org.label">Organisation</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="card content-box" style="height: calc(100% - 45px)">
+    <div class="col-inner box-shadow-woh fh">
+      <div class="header">
+        <div class="row">
+          <div class="col-12 pdr-0" [ngClass]="loggedinUserDet.roleType == 'Analyst' ? 'col-sm-6' : 'col-sm-2'">
+            <div class="form-group">
+              <div class="input-group search-box-filter" style="justify-content: space-between; align-items: center">
+                <div class="input-container">
+                  <i style="font-size: 1.3rem" class="material-icons">search</i>
+                  <input
+                    style="height: 25px; padding-left: 0; border: none"
+                    (keyup.enter)="search()"
+                    class="form-control"
+                    placeholder="{{ 'cyfirmaweb.org.form.placeholder.search' | translate }}"
+                    [(ngModel)]="searchOrgs"
+                  />
+                </div>
+                <!-- &nbsp;&nbsp; -->
+                <div class="input-container" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+                  <i style="font-size: 1.3rem" class="material-icons">search</i>
+                  <input
+                    style="height: 25px; padding-left: 0; border: none"
+                    (keyup.enter)="search()"
+                    class="form-control"
+                    *ngIf="loggedinUserDet.roleType == 'Analyst'"
+                    placeholder="{{ 'cyfirmaweb.org.form.placeholder.searchSales' | translate }}"
+                    [(ngModel)]="searchSales"
+                  />
+                </div>
+                <!-- &nbsp;&nbsp; -->
+                <div class="search-box-container" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+                  <div class="input-container">
+                    <i style="font-size: 1.3rem" class="material-icons">search</i>
+                    <input
+                      style="height: 25px; padding-left: 0; border: none"
+                      (keyup.enter)="search()"
+                      class="form-control"
+                      *ngIf="loggedinUserDet.roleType == 'Analyst'"
+                      placeholder="{{ 'cyfirmaweb.org.form.placeholder.searchCreatedby' | translate }}"
+                      [(ngModel)]="searchCreatedby"
+                    />
+                  </div>
+                  <img
+                    title="Export Created By to CSV"
+                    class="cp"
+                    width="40"
+                    style="margin-top: 0px; cursor: pointer"
+                    src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_csv_export.png"
+                    [ngClass]="searchCreatedby === '' ? 'img_disabled' : ''"
+                    (click)="exportCSVforCreatedBy()"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-4">
+            <button type="submit" class="btn cust_btn info mrr-5" (click)="search()" jhiTranslate="cyfirmaweb.org.home.search"></button>
+            <button
+              type="submit"
+              class="btn cust_btn info"
+              (click)="resetAll()"
+              [disabled]="!searchOrgs && !searchSales && !searchCreatedby"
+              jhiTranslate="cyfirmaweb.org.home.reset"
+            ></button>
+            <mat-radio-group
+              style="vertical-align: sub"
+              class="radio-group mrl-5"
+              [(ngModel)]="sveCat"
+              *ngIf="loggedinUserDet.roleType == 'Analyst' && !searchOrgs"
+            >
+              <mat-radio-button
+                class="radio-button mrr-3"
+                [value]="cat"
+                *ngFor="let cat of ['Active', 'InActive']"
+                (change)="getListByStatus(cat)"
+              >
+                <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.{{ cat }}"></span>
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+          <div
+            class="col-6 col-sm-2 text-end float-end"
+            [ngClass]="loggedinUserDet.roleType == 'Analyst' ? 'col-sm-1' : 'col-sm-5'"
+            style="margin-bottom: -27px;float:inline-end;"
+          >
+            &nbsp;
+            <button
+              class="btn cust_btn info"
+              (click)="openDialog('create')"
+              *ngIf="loggedinUserDet.roleType == 'Analyst' || loggedinUserDet.isMsspParent"
+              jhiTranslate="cyfirmaweb.org.home.createLabel"
+            >
+              Create Organisation
+            </button>
+
+          </div>
+        </div>
+      </div>
+      <div class="body table-wrapper" style="height: calc(100% - 60px)">
+        <div class="table-header table_row">
+          <div
+            class="table_cell"
+            *ngIf="loggedinUserDet.roleType == 'Analyst' && searchOrgs"
+            style="font-size: 2px; margin-left: 2px; height: 2px; width: 20px; vertical-align: middle"
+          ></div>
+          <div class="table_cell c2 txt-inspls" style="margin-top: 6px">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.organisationName"></span>
+          </div>
+          <div class="table_cell c3 txt-inspls">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.contactPerson"></span>
+          </div>
+          <div class="table_cell c4 txt-inspls">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.address"></span>
+          </div>
+          <div class="table_cell c5 txt-inspls">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.email"></span>
+          </div>
+          <div class="table_cell c6 txt-inspls" *ngIf="loggedinUserDet.roleType !== 'Analyst'">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.contactPhone"></span>
+          </div>
+          <div class="table_cell c7 txt-inspls" *ngIf="loggedinUserDet.roleType !== 'Analyst'">
+            <span class="tit-h uppercase" jhiTranslate="cyfirmaweb.org.home.status"></span>
+          </div>
+          <div class="table_cell c5" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.testOrg"></span>
+          </div>
+          <div class="table_cell c5" *ngIf="loggedinUserDet.roleType === 'Analyst'">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.sales"></span>
+          </div>
+          <div class="table_cell c5" *ngIf="loggedinUserDet.roleType === 'Analyst'">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.preSales"></span>
+          </div>
+          <div class="table_cell c5" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+            <span class="tit-h">Created By</span>
+          </div>
+          <div class="table_cell c5" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+            <span class="tit-h">Created Date</span>
+          </div>
+          <!-- <div class="table_cell c5"  *ngIf="loggedinUserDet.roleType == 'Analyst' ">
+            <span class="tit-h">Sales</span>
+          </div> -->
+          <div class="table_cell last-cell">
+            <span class="tit-h" jhiTranslate="cyfirmaweb.org.home.actions"></span>
+          </div>
+        </div>
+        <div class="table-body" >
+          <div class="table_row" *ngFor="let org of orgList">
+            <div class="table_cell" *ngIf="loggedinUserDet.roleType == 'Analyst' && searchOrgs" style="width: 20px; vertical-align: middle">
+              <img src="../../content/images/active-status.svg" style="max-width: 10px" title="Active" *ngIf="org.status == 'Active'" />
+              <img
+                src="../../content/images/inactive-status.svg"
+                style="max-width: 10px;"
+                title="Inactive"
+                *ngIf="org.status == 'Inactive'"
+              />
+            </div>
+            
+            <div class="table_cell c2 text-warp txt-inspls" matTooltip="{{ org.name }}" [matTooltipPosition]="'above'">
+              {{ org.name }}
+            </div>
+            
+            <div class="table_cell c3 text-warp txt-inspls" matTooltip="{{ org.contact }}" [matTooltipPosition]="'above'">
+              {{ org.contact }}
+            </div>
+            <div
+              class="table_cell c4 text-warp txt-inspls"
+              matTooltip="{{ setAddress(org.address, org.city, org.state, org.country, org.zip) }}"
+              [matTooltipPosition]="'above'"
+            >
+              {{ setAddress(org.address, org.city, org.state, org.country, org.zip) }}
+            </div>
+            <div class="table_cell c5 text-warp txt-inspls" matTooltip="{{ org.email }}" [matTooltipPosition]="'above'">
+              {{ org.email }}
+            </div>
+            <div
+              class="table_cell c6 text-warp txt-inspls"
+              matTooltip="{{ org.phone }}"
+              [matTooltipPosition]="'above'"
+              *ngIf="loggedinUserDet.roleType !== 'Analyst'"
+            >
+              {{ org.phone }}
+            </div>
+            <div
+              class="table_cell c7 text-warp txt-inspls"
+              style="padding-left: 7px"
+              matTooltip="{{ org.status }}"
+              [matTooltipPosition]="'above'"
+              *ngIf="loggedinUserDet.roleType !== 'Analyst'"
+            >
+              {{ org.status }}
+            </div>
+            <div class="table_cell c5 text-warp" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+              {{ org.testorg == true ? 'Yes' : '' }}
+            </div>
+            <div
+              class="table_cell c5 text-warp"
+              *ngIf="loggedinUserDet.roleType === 'Analyst'"
+              matTooltip="{{ org.salesPerson }}"
+              [matTooltipPosition]="'above'"
+              matTooltipClass="txt-trunc"
+            >
+              {{ org.salesPerson }}
+              <!-- <span *ngFor="let email of org.salesObject; let l = last">
+                {{email.salesEmail}}
+                <span *ngIf="!l">&nbsp;,</span>
+              </span> -->
+            </div>
+            <div
+              class="table_cell c5 text-warp"
+              *ngIf="loggedinUserDet.roleType === 'Analyst'"
+              matTooltip="{{ org.presalesPerson }}"
+              [matTooltipPosition]="'above'"
+              matTooltipClass="txt-trunc"
+            >
+              {{ org.presalesPerson }}
+            </div>
+            <div class="table_cell c5 text-warp" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+              {{ org.createdby }}
+            </div>
+            <div class="table_cell c5 text-warp" *ngIf="loggedinUserDet.roleType == 'Analyst'">
+              {{ org.createddate | date: 'MMM d, y' }}
+            </div>
+            <!-- <div class="table_cell c5" *ngIf="loggedinUserDet.roleType == 'Analyst'"  [matTooltip]="showAllSales(org.sales, 'salesEmail')">
+              <span *ngFor="let sales of org.sales; let c= index">
+                <span *ngIf="c<3">{{sales.salesEmail}}</span>
+              </span>
+              <span class="active_link" *ngIf="org.sales.length > 3">+ {{org.sales.length - 3}}
+                more</span>
+            </div> -->
+            <div class="table_cell last-cell">
+              <span
+                (click)="openDialog('create', org)"
+                *ngIf="loggedinUserDet.roleType == 'Admin' || loggedinUserDet.roleType == 'Analyst' || loggedinOrgDet == true"
+              >
+                <i class="material-icons edit" title="Edit">edit</i>
+              </span>
+              <span (click)="openOrgDetails(org.id)">
+                <i class="material-icons edit" title="Details">remove_red_eye</i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pagination-footer">
+    <jhi-c-pagination></jhi-c-pagination>
+  </div>
+</div>
