@@ -1,0 +1,482 @@
+<div class="cap-wrapper lite {{ UAName }}">
+  <div class="cap-header">
+    <div class="container-fluid pdr-0">
+      <div class="row no-mr">
+        <div class="col-2 pdl-0 d-flex align-items-center">
+          <a routerLink="/cap/tvi">
+            <img src="../../content/images/logo-decyfir-v2.png" />
+          </a>
+          <div class="d-flex align-items-center" style="margin-left: -20px" *ngIf="logoURL">
+            <!-- <i class="material-icons" style="font-size: 16px;">clear</i> -->
+            <div style="height: 28px; width: 2px; background: #666; margin: 0 5px; border-radius: 8px;"></div>
+            <img [src]="logoURL" style="height: 32px; width: 120px; object-fit: contain; object-position: left; margin-left: 5px;"/>
+          </div>
+          <a style="line-height: 4" class="cp pull-right" routerLink="/cap/tvi/correlation-dashboard"
+            *ngIf="correlationAccess">
+            <img width="25" src="../../content/images/module_icons/correlation-dashboard.png" />
+          </a>
+        </div>
+        <div class="col-8" [ngClass]="innerWidth > 1350 ? '': 'pdr-0'">
+          <ul class="nav nav-pills mb-0 inner-module-tab" id="module-tabs" [ngClass]="innerWidth > 1350 ? 'justify-content-center': 'justify-content-end'" [hidden]="selectedModule !== 'tvi'">
+            <li class="nav-item">
+              <a class="nav-link uppercase cp" [class.active]="modulesTab.st === 'executive'"
+                (click)="switchTab('tvi', 'executive')">
+                <img width="100" title="executive" src="{{ s3BaseUrl + 'executive_view_v3.png' }}" />
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link uppercase cp" [class.active]="modulesTab.st === 'management'"
+                (click)="switchTab('tvi', 'management')">
+                <img width="125" title="management" src="{{ s3BaseUrl + 'management_view_v3.png' }}" />
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link uppercase cp" [class.active]="modulesTab.st === 'operations'"
+                (click)="switchTab('tvi', 'operations')">
+                <img width="125" title="operations" src="{{ s3BaseUrl + 'operations_view_v3.png' }}" />
+              </a>
+            </li>
+            <li style="width: 275px">
+              <div class="flex-box fh">
+                <div class="flex-cell1">
+                  <mat-select class="form-control global-select" [(ngModel)]="filterOptions.key">
+                    <mat-option value="">Select</mat-option>
+                    <mat-option [value]="key.id" *ngFor="let key of filterOptions.keywords" [disabled]="!key.active">
+                      <span class="select-box-img-span"><img [src]="key.icon" /></span>
+                      <span class="bt" [ngClass]="{ 'blur-text-2': !key.active }"
+                        jhiTranslate="global.keywords.{{ key.id }}"><b>{{ key.name }}</b></span>
+                    </mat-option>
+                  </mat-select>
+                </div>
+                <div class="flex-cell2">
+                  <form (ngSubmit)="searchKeywords(filterOptions.key, filterOptions.searchBy)">
+                    <div class="input-group"
+                      *ngIf="filterOptions.key !== 'Industry' && filterOptions.key !== 'Technology' && filterOptions.key !== 'Geography'">
+                      <input id="globalSearch" class="global-search form-control" type="text"
+                        placeholder="{{ 'cyfirmaweb.situational.placeholder.search' | translate }}"
+                        [(ngModel)]="filterOptions.searchBy" style="font-size: 12px !important"
+                        [ngModelOptions]="{ standalone: true }" aria-label="search"
+                        aria-describedby="global-search-bar" />
+                      <div class="input-group-append global-search-addon"
+                        (click)="searchKeywords(filterOptions.key, filterOptions.searchBy)">
+                        <span class="input-group-text" id="global-search-bar">
+                          <i class="material-icons">search</i>
+                        </span>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="form-group no-mr ps_r" style="max-width: 150px" *ngIf="filterOptions.key === 'Industry'">
+                    <jhi-type-ahead [data]="gitFilterInfo.industry.list" [filterOptions]="gitFilterInfo.industry.config"
+                      (selectedOptionEmitter)="onGITSelection($event)"></jhi-type-ahead>
+                    <!-- <span class="txt-wrap ind-desc" style="max-width: 100%;left: 10px;"
+                                                *ngIf="selectedGITOption && selectedGITOption.description">
+                                                {{selectedGITOption.description}}
+                                            </span> -->
+                  </div>
+                  <div class="form-group no-mr" style="max-width: 150px" *ngIf="filterOptions.key === 'Technology'">
+                    <jhi-type-ahead [data]="gitFilterInfo.technology.list"
+                      [filterOptions]="gitFilterInfo.technology.config"
+                      (selectedOptionEmitter)="onGITSelection($event)"></jhi-type-ahead>
+                  </div>
+                  <div class="form-group" style="max-width: 150px" *ngIf="filterOptions.key === 'Geography'">
+                    <jhi-type-ahead [data]="gitFilterInfo.geography.list"
+                      [filterOptions]="gitFilterInfo.geography.config"
+                      (selectedOptionEmitter)="onGITSelection($event)"></jhi-type-ahead>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item" *ngIf="pov != 'TRIAL_POV'">
+              <a class="nav-link uppercase cp" [class.active]="modulesTab.st === 'reports'"
+                (click)="pov != 'TRIAL_POV' ? switchTab('tvi', 'reports') : null">
+                <img width="95" title="reports" src="{{ s3BaseUrl + 'reports_view_v3.png' }}" />
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-2 text-end" style="padding: 0">
+          <div class="rinner">
+            <div class="header_email_wrap inline_block">
+              <button class="client-btn" mat-icon-button [matMenuTriggerFor]="clientSelection" *ngIf="isAnalyst">
+                <label class="selectlab" matTooltip="{{ selectedOrg.name.length <= 18 ? '' : selectedOrg.name }}"
+                  [matTooltipPosition]="'above'">
+                  {{ selectedOrg.name ? selectedOrg.name : ('cyfirmaweb.situational.commons.clients' | translate)
+                  }}</label>
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              </button>
+              <button class="client-btn" mat-icon-button [matMenuTriggerFor]="msspClientSelection"
+                *ngIf="isMsspParent && !isAnalyst">
+                <label class="selectlab" matTooltip="{{ selectedOrg.name.length <= 18 ? '' : selectedOrg.name }}"
+                  [matTooltipPosition]="'above'">
+                  {{ selectedOrg.name ? selectedOrg.name : ('cyfirmaweb.situational.commons.clients' | translate)
+                  }}</label>
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              </button>
+              <mat-menu #clientSelection="matMenu">
+                <form (click)="$event.stopPropagation()" class="p-2">
+                  <mat-form-field class="input-group search-box-filter hw">
+                    <input type="text" placeholder="Search Org (Name/ID)" aria-label="Search Org" matInput
+                      [(ngModel)]="filterOrg" name="filterorg" />
+                    <mat-icon matPrefix>search</mat-icon>
+                  </mat-form-field>
+                  <div>
+                    <button class="btn cust_btn lite-dark fw btwc" (click)="changeSort()">Sorted By: {{ sortOptions[selectedSortOption].title }}</button>
+                  </div>
+                </form>
+                <button class="mat-menu-item" *ngFor="let org of orgs | filterOrgByNameOrId: filterOrg: selectedSortOption"
+                  (click)="switchByOrg(org)">
+                  <span>{{ org.name }}</span>
+                </button>
+              </mat-menu>
+              <mat-menu #msspClientSelection="matMenu">
+                <button mat-menu-item *ngFor="let org of msspOrgs" (click)="switchByOrg(org)">
+                  <span>{{ org.name }}</span>
+                </button>
+              </mat-menu>
+            </div>
+            <div class="inline_block pdt-5" style="border-radius: 50%">
+              <button class="logged-btn cp" mat-button [matMenuTriggerFor]="loggedInfo">
+                <small>{{ getSN(loggedUserInfo.orgName) }}</small>
+              </button>
+              <mat-menu #loggedInfo="matMenu" style="max-width: 200px" class="pdl-15 pdr-15">
+                <p class="text-center">
+                  <b style="text-decoration: underline" class="btwc">{{ 'global.welcome' | translate }} !</b>
+                </p>
+                <div class="text-center mrb-10"><img width="50"
+                    src="../../content/images/login/Cyfirma-User-Icon_11FEB2021_V1.png" /></div>
+                <p class="no-mr">
+                  <b class="btwc">{{ 'orgs.org.title' | translate }}: </b> <span class="fs14">{{ loggedUserInfo.orgName
+                    }}</span>
+                </p>
+                <p class="no-mr">
+                  <b class="btwc">{{ 'global.form.email' | translate }}: </b> <span class="fs14">{{ loggedUserInfo.email
+                    }}</span>
+                </p>
+                <!--<mat-radio-group class="radio-group" [(ngModel)]="selectedLanguage">
+                                    <mat-radio-button class="radio-button mrr-7 mrt-10" [value]="lan.key"
+                                        *ngFor="let lan of [{key: 'en', name: 'English'}, {key: 'ja', name: 'Japanese(日本語)'}]"
+                                        (change)="toggleLanguage(lan.key)">
+                                        {{lan.name}}
+                                    </mat-radio-button>
+                                    <mat-radio-button class="radio-button mrr-7 mrt-10" [value]="lan.key"
+                                        *ngFor="let lan of languages" (change)="toggleLanguage(lan)">
+                                        {{lan | findLanguageFromKey}}
+                                    </mat-radio-button>
+                                </mat-radio-group>-->
+                <div (click)="$event.stopPropagation(); $event.preventDefault()">
+                <mat-form-field>
+                  <mat-select name="countryString" [(value)]="selectedLanguage" placeholder="Change Language"
+                    (selectionChange)="toggleLanguage(selectedLanguage)">
+                    <mat-option *ngFor="let lang of languages" [value]="lang"> {{ lang | findLanguageFromKey
+                      }}</mat-option>
+                    <!-- <mat-option [value]="'en'">English</mat-option>
+                                        <mat-option [value]="'ja'">日本語</mat-option>
+                                        <mat-option [value]="'es'">Espanol</mat-option>
+                                        <mat-option [value]="'pt'">Portuguese</mat-option> -->
+                  </mat-select>
+                </mat-form-field>
+                </div>
+                <button class="btn cust_btn lite-dark fw btwc mrb-5 mrt-10" routerLink="/reset/request">
+                  <img width="30" title="Reset Password"
+                    src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Password.png" />{{
+                  'reset.finish.title' | translate
+                  }}
+                </button>
+                <button class="btn cust_btn lite-dark fw btwc" (click)="logout()">
+                  <img height="40" title="Sign Out"
+                    src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Sign-Out.png" />
+                  {{ 'global.menu.account.logout' | translate }}
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row cap-body">
+    <div id="cap-sidebar" class="cap-sidebar" [class.collapsed]="sidebarCollapsed" *ngIf="refererType !== 'splunk'">
+      <ul class="nav flex-column">
+        <li class="nav-item" (click)="pov != 'TRIAL_POV' ? navigateModule('alert-center') : null"
+          [class.active]="selectedModule === 'alert-center'">
+          <a class="nav-link" [class.active]="selectedModule === 'alert-center'">
+            <i class="material-icons text-center" title="{{ sidebarCollapsed ? 'Alert Center' : '' }}"
+              style="color: #f00; height: 30px; line-height: 1.2">notification_important</i>
+            <p class="pdt-5" jhiTranslate="global.commons.alertPageTitle">Alert Center</p>
+          </a>
+        </li>
+        <ng-container *ngFor="let m of _mms">
+          <li class="nav-item" (click)="navigateModule(m.routeLabel)" *ngIf="m.active">
+            <a class="nav-link" [class.active]="selectedModule === m.routeLabel">
+              <img title="{{
+                  sidebarCollapsed
+                    ? m.name === 'Threat Visibility and Intelligence'
+                      ? 'External Threat Landscape Management'
+                      : m.name
+                    : ''
+                }}" [src]="m.menuIcon" />
+              <p>
+                {{ m.name === 'Threat Visibility and Intelligence' ? 'External Threat Landscape Management' : m.name }}
+              </p>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+      <div class="divider clearfix"></div>
+      <ul class="nav flex-column account-menu">
+        <!-- <li class="nav-item" *ngIf="isAnalyst" (click)="navigateModule('analyst-view')">
+          <a class="nav-link"
+            ><img
+              title="{{ sidebarCollapsed ? 'Analyst' : '' }}"
+              src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Management.png"
+            />
+            <p jhiTranslate="global.menu.account.analyst">Analyst</p> -->
+        <!-- <p mat-button [matMenuTriggerFor]="AnalystRole">Analyst</p> -->
+        <!-- </a>
+          <mat-menu #AnalystRole="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="reports" style="height: 30px; line-height: 30px">
+              <img width="25" class="menu-icon-img" src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Reports.png" />
+              <span class="fs14 fw6">Reports</span>
+            </button>
+            <button mat-menu-item [matMenuTriggerFor]="core" style="height: 30px; line-height: 30px">
+              <img width="25" class="menu-icon-img" src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Feed Setup.png" />
+              <span class="fs14 fw6">Feed Setups</span>
+            </button> -->
+        <!-- <button mat-menu-item [matMenuTriggerFor]="cspassword" style="height: 30px;line-height: 30px;"> -->
+        <!-- <li class="nav-item" *ngIf="rootOrg">
+                <a class="nav-link" routerLink="/cspassword"><img title="{{sidebarCollapsed ? 'Reset Customer Support Password' : ''}}"
+                    src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Password.png">
+                  <p>Reset CS Password</p>
+                </a>
+              </li> -->
+        <!-- <button mat-menu-item routerLink="/cspassword" style="height: 30px; line-height: 30px">
+              <img width="25" class="menu-icon-img" src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Password.png" />
+              <span class="fs13 fw6">Reset CS Password</span>
+            </button> -->
+
+        <!-- </button> -->
+        <!-- </mat-menu>
+
+          <mat-menu class="core-menu-list" #core>
+            <button
+              mat-menu-item
+              (click)="goTo('core', nav.name)"
+              *ngFor="let nav of menuItem.core"
+              style="height: 30px; line-height: 30px"
+            >
+              <span class="fs13 fw6">{{ nav.displayName }}</span>
+            </button>
+          </mat-menu>
+
+          <mat-menu #reports>
+            <button
+              mat-menu-item
+              (click)="goTo('reports', nav.name)"
+              *ngFor="let nav of menuItem.reports"
+              style="height: 30px; line-height: 30px"
+            >
+              <span class="fs13 fw6">{{ nav.displayName }}</span>
+            </button>
+          </mat-menu>
+        </li> -->
+        <li class="nav-item" *ngIf="isAnalyst" (click)="navigateModule('analyst-view-new')">
+          <a class="nav-link"><img title="{{ sidebarCollapsed ? 'Analyst' : '' }}"
+              src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Management.png" />
+            <p jhiTranslate="global.menu.account.analystNew">Analyst</p>
+            <!-- <p mat-button [matMenuTriggerFor]="AnalystRole">Analyst</p> -->
+          </a>
+          <mat-menu #AnalystRole="matMenu">
+            <button mat-menu-item [matMenuTriggerFor]="reports" style="height: 30px; line-height: 30px">
+              <img width="25" class="menu-icon-img"
+                src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Reports.png" />
+              <span class="fs14 fw6">Reports</span>
+            </button>
+            <button mat-menu-item [matMenuTriggerFor]="core" style="height: 30px; line-height: 30px">
+              <img width="25" class="menu-icon-img"
+                src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Feed Setup.png" />
+              <span class="fs14 fw6">Feed Setups</span>
+            </button>
+            <!-- <button mat-menu-item [matMenuTriggerFor]="cspassword" style="height: 30px;line-height: 30px;"> -->
+            <!-- <li class="nav-item" *ngIf="rootOrg">
+                <a class="nav-link" routerLink="/cspassword"><img title="{{sidebarCollapsed ? 'Reset Customer Support Password' : ''}}"
+                    src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Password.png">
+                  <p>Reset CS Password</p>
+                </a>
+              </li> -->
+            <button mat-menu-item routerLink="/cspassword" style="height: 30px; line-height: 30px">
+              <img width="25" class="menu-icon-img"
+                src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Password.png" />
+              <span class="fs13 fw6">Reset CS Password</span>
+            </button>
+
+            <!-- </button> -->
+          </mat-menu>
+
+          <mat-menu class="core-menu-list" #core>
+            <button mat-menu-item (click)="goTo('core', nav.name)" *ngFor="let nav of menuItem.core"
+              style="height: 30px; line-height: 30px">
+              <span class="fs13 fw6">{{ nav.displayName }}</span>
+            </button>
+          </mat-menu>
+
+          <mat-menu #reports>
+            <button mat-menu-item (click)="goTo('reports', nav.name)" *ngFor="let nav of menuItem.reports"
+              style="height: 30px; line-height: 30px">
+              <span class="fs13 fw6">{{ nav.displayName }}</span>
+            </button>
+          </mat-menu>
+        </li>
+        <li class="nav-item" (click)="navigateModule('org')">
+          <a class="nav-link" [class.active]="selectedModule === 'org'"><img
+              title="{{ sidebarCollapsed ? 'On Boarding' : '' }}"
+              src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Onboarding.png" />
+            <p jhiTranslate="global.menu.account.On Boarding">On Boarding</p>
+          </a>
+        </li>
+        <!-- <li class="nav-item" (click)="navigateModule('mssp')" *ngIf="loggedUserInfo.isMsspParent">
+                    <a class="nav-link" [class.active]="selectedModule === 'mssp'"
+                        title="{{sidebarCollapsed ? 'MSSP Dashboard' : ''}}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="30" viewBox="0 0 712 712"
+                            fill="none">
+                            <circle cx="356" cy="356" r="346" fill="#ECEFF1" stroke="#002C63" stroke-width="20" />
+                            <path
+                                d="M274.154 395.5C232.154 421.9 224.987 466.5 226.654 485.5L101.655 485C98.155 481.167 95.355 467.7 112.155 444.5C133.155 415.5 177.655 415.5 194.155 400.5C210.655 385.5 191.155 374.5 188.655 369C186.155 363.5 178.654 360 172.655 343.5C167.855 330.3 175.322 325 179.655 324L178.654 291.5C178.154 264.5 203.154 251 210.154 249.5C215.754 248.3 217.488 243 217.654 240.5C214.654 230 228.654 230 248.654 240.5C293.454 258.1 297.987 287.833 294.654 300.5L294.154 325C302.154 325.5 302.654 334.5 300.154 343.5C297.654 352.5 286.654 368 276.654 377.5C268.654 385.1 271.654 392.667 274.154 395.5Z"
+                                fill="#0F7DC2" />
+                            <path
+                                d="M444.267 378.999C411.867 417.399 421.767 466.666 430.767 486.499L248.266 485C244.666 440.6 278.433 416.167 295.766 409.5C334.166 401.9 362.266 381.5 359.266 364C345.666 352.8 342.933 339 343.266 333.5C339.1 334.667 330.166 332.9 327.766 316.5C325.366 300.1 331.1 293.333 334.266 292C334.1 286.667 333.566 273.1 332.766 261.5C331.966 249.9 322.1 241 317.266 238C332.933 220.333 369.866 185 392.266 185C414.666 185 429.933 200 434.766 207.5C459.766 210.5 470.766 225 476.266 249C480.666 268.2 471.1 286.333 465.766 292.999C468.266 292.332 472.966 295.299 471.766 312.499C470.566 329.699 460.933 333.666 456.266 333.499C455.466 349.499 445.266 360.499 440.266 363.999C438.666 370.399 442.267 376.666 444.267 378.999Z"
+                                fill="#002C63" />
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M527.655 527.5C574.876 527.5 613.155 489.22 613.155 442C613.155 394.78 574.876 356.5 527.655 356.5C480.435 356.5 442.155 394.78 442.155 442C442.155 489.22 480.435 527.5 527.655 527.5ZM512.638 474.9L514.588 490.5H541.4L543.35 474.9C544.325 474.494 545.3 474.006 546.275 473.438C547.25 472.869 548.184 472.259 549.078 471.609L563.459 477.703L576.866 454.547L564.312 445.041C564.475 444.472 564.556 443.923 564.556 443.393V440.102C564.556 439.576 564.516 439.028 564.434 438.459L576.987 428.953L563.581 405.797L549.078 411.891C548.184 411.241 547.271 410.631 546.338 410.062C545.402 409.494 544.406 409.006 543.35 408.6L541.4 393H514.588L512.638 408.6C511.663 409.006 510.688 409.494 509.713 410.062C508.738 410.631 507.803 411.241 506.909 411.891L492.406 405.797L479 428.953L491.553 438.459C491.472 439.028 491.431 439.576 491.431 440.102V443.393C491.431 443.923 491.472 444.472 491.553 445.041L479 454.547L492.406 477.703L506.909 471.609C507.803 472.259 508.718 472.869 509.654 473.438C510.587 474.006 511.581 474.494 512.638 474.9ZM540.303 453.816C536.972 457.147 532.95 458.812 528.238 458.812C523.444 458.812 519.401 457.147 516.109 453.816C512.82 450.484 511.175 446.463 511.175 441.75C511.175 437.037 512.82 433.016 516.109 429.684C519.401 426.353 523.444 424.688 528.238 424.688C532.95 424.688 536.972 426.353 540.303 429.684C543.634 433.016 545.3 437.037 545.3 441.75C545.3 446.463 543.634 450.484 540.303 453.816Z"
+                                fill="#CE1126" />
+                        </svg>
+                        <p>MSSP Dashboard</p>
+                    </a>
+                </li> -->
+        <li class="nav-item">
+          <a class="nav-link" (click)="pov != 'TRIAL_POV' ? showInqiries() : null"
+            [class.active]="selectedModule === 'inquiries'"><img
+              title="{{ !sidebarCollapsed ? '' : ('global.menu.account.csp' | translate) }}"
+              src="../../content/images/png/Web 'i' Icon_Option 03.png" />
+            <p jhiTranslate="global.menu.account.csp">Customer Suport</p>
+          </a>
+        </li>
+        <!-- <li class="nav-item" (click)="navigateModule('release-notes')">
+                    <a class="nav-link" [class.active]="selectedModule === 'release-notes'"><img
+                            title="{{sidebarCollapsed ? 'Release Notes' : ''}}"
+                            src="../../content/images/cap2.0/cyfirma_v1/release notes.png">
+                        <p jhiTranslate="global.menu.account.releaseNotes">Release Notes</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [class.active]="selectedModule === 'help-menu'" mat-button
+                        [matMenuTriggerFor]="Helpemenue">
+                        <img title="{{sidebarCollapsed ? 'Help Menu' : ''}}"
+                            src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_help.png">
+                        <p class="text-left" jhiTranslate="global.menu.account.helpMenu">Help Menu</p>
+                    </a>
+                    <mat-menu #Helpemenue=matMenu>
+                        <button mat-menu-item style="height: 30px;line-height: 30px;"
+                            (click)="navigateHelpmenu('help-menu','eng')">
+                            <span class="fs14 fw6">English</span>
+                            <a download>
+                                <span class="fs14 fw6"><img style="    margin-left: 26px;" height="10" width="15"
+                                        src="../../content/images/png/download.png"></span>
+                            </a>
+                        </button>
+                        <button mat-menu-item style="height: 30px;line-height: 30px;"
+                            (click)="navigateHelpmenu('help-menu','jp')">
+                            <span class="fs14 fw6">Japanese</span>
+                            <a download>
+                                <span class="fs14 fw6"> <img style="margin-left: 14px;" height="10" width="15"
+                                        src="../../content/images/png/download.png"></span>
+                            </a>
+                        </button>
+                    </mat-menu>
+                </li>
+                <li class="nav-item" (click)="navigateModule('faq-menu')">
+                    <a class="nav-link" [class.active]="selectedModule === 'faq-menu'"><img
+                            title="{{sidebarCollapsed ? 'FAQ' : ''}}"
+                            src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_faq.png">
+                        <p jhiTranslate="global.menu.account.faq">FAQ</p>
+                    </a>
+                </li> -->
+        <li class="nav-item" (click)="navigateModule('advance-search')" *ngIf="isAnalyst">
+          <a class="nav-link" [class.active]="selectedModule === 'advance-search'">
+            <img title="{{ sidebarCollapsed ? 'Advanced Search' : '' }}"
+              src="../../content/images/cap2.0/commons/advance_search.png" />
+            <!-- <span style="width: 25px;" class="material-icons" title="Advance Search">search</span> -->
+            <p jhiTranslate="global.menu.account.Advanced Search">Advanced Search</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/password"><img title="{{ sidebarCollapsed ? 'Change Password' : '' }}"
+              src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Password.png" />
+            <p jhiTranslate="global.menu.account.Change Password">Change Password</p>
+          </a>
+        </li>
+        <!-- <li class="nav-item">
+                    <a class="nav-link" (click)="showInqiries()" [class.active]="selectedModule === 'inquiries'"><img
+                            title="{{!sidebarCollapsed ? '' : 'global.menu.account.csp' | translate}}"
+                            src="../../content/images/png/Web 'i' Icon_Option 03.png">
+                        <p jhiTranslate="global.menu.account.csp">Customer Support</p>
+                    </a>
+                </li> -->
+
+        <!-- <li class="nav-item">
+                    <a class="nav-link" (click)="logout()"><img title="{{sidebarCollapsed ? 'Sign Out' : ''}}"
+                            src="../../content/images/cap2.0/cyfirma_v1/CYFIRMA_icon_Sign-Out.png">
+                        <p>Sign Out</p>
+                    </a>
+                </li> -->
+      </ul>
+    </div>
+    <div id="cap-container" class="cap-container" [class.expanded]="sidebarCollapsed">
+      <i class="material-icons stick-left" [class.toggle-active]="sidebarCollapsed" (click)="toggleSidebar()"
+        *ngIf="refererType !== 'splunk'">more_vert</i>
+      <div class="cap-module-wrapper">
+        <!-- <div class="arrow-left"></div> -->
+        <div class="container-fluid">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+    <div class="alert-container" [class.expanded]="!alertCollapsed" *ngIf="refererType !== 'splunk'">
+      <img class="alert-toggle cp" alt="Alert" src="../../content/images/png/Vector-warning.png"
+        title="Latest Critical Findings" (click)="pov != 'TRIAL_POV' ? toggleAlert() : null" />
+      <div class="row bdr_btm">
+        <div class="col-12 alert-header">
+          <h2>
+            <b class="btwc uppercase">Latest Alerts</b>
+            <b class="btwc pull-right hds" (click)="toggleAlert()">Hide Section</b>
+            <b class="btwc pull-right hds" (click)="navigateAlerts()">View All</b>
+          </h2>
+        </div>
+      </div>
+      <div class="alert-body">
+        <div class="row bdr_btm mrb-5" *ngFor="let al of alerts">
+          <div class="col-12">
+            <p>
+              <a class="bt underline lowercase" style="color: #002c63" (click)="onAlertClicked(al)">{{
+                getFormattedData(al.title) }}</a>
+            </p>
+            <p>
+              <span>{{ al.category ? al.category : '--' }}</span>
+              <span class="pull-right status" [ngClass]="getPriorityValue(al.riskScore)">{{
+                al.riskScore ? getPriorityValue(al.riskScore) : '--'
+                }}</span>
+            </p>
+            <!-- <p><a  href="{{al.source}}"  class="txt-wrap"*ngIf="al.source" > {{al.source}}</a></p> -->
+            <p class="txt-wrap" *ngIf="al.source && al.category !== 'VULNERABILITY'">{{ al.source }}</p>
+            <a *ngIf="al.source && al.category === 'VULNERABILITY'" class="cf-src txt-wrap" href="{{ al.source }}"
+              target="_blank">{{
+              al.source
+              }}</a>
+            <p *ngIf="al.category === 'IP Address'"><b class="bt">Last Seen:</b> {{ al.createdDate | date: 'dd-MMM-yyyy'
+              }}</p>
+            <!-- <p *ngIf="al.type === 'VULNERABILITY'"><b class="bt">CVSS:</b> {{al.cvss}}</p> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
