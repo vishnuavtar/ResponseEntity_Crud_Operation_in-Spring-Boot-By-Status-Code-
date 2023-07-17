@@ -1,0 +1,71 @@
+@import '../../content/scss/bootstrap-variables';
+$border-col: #ccc;
+$active-col: #005d87;
+$trans-duration: 0.5s;
+.table-header {
+  height: 40px;
+  label,
+  span {
+    color: $font-title-color !important;
+    font-size: 12px;
+  }
+}
+.pagination-footer {
+  height: 50px;
+  background: linear-gradient(0deg, #fff, #cdcdcd);
+}
+.table-body .table_row .table_cell {
+  font-size: 12px !important;
+  vertical-align: middle;
+}
+.ng-invalid:not(form) {
+  border-left: 5px solid red;
+}
+.text-warp {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// .txt-inspls{
+// width:169px;
+// }
+.table-header {
+  height: 40px;
+  border-bottom: 1px solid #e0e0e0 !important;
+}
+::ng-deep .tit-h span {
+  font-weight: bold !important;
+  font-size: 12px !important;
+  color: #002c63 !important;
+}
+.content-box .col-inner span {
+  font-weight: bold !important;
+  font-size: 12px !important;
+  color: #002c63 !important;
+}
+.input-container {
+  display: flex;
+  border: 1px solid #777;
+  border-radius: 2px;
+  align-items: center;
+  height: 26px; //previous 27 px
+  width: 160px; // previous 170 px
+  background: white;
+}
+.input-container:focus-within {
+  border: 1px solid #000;
+}
+.search-box-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eef1fa;
+  height: 35px;
+  padding: 0 2px;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+.img_disabled {
+  filter: opacity(50%);
+}
